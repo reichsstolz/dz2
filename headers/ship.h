@@ -12,7 +12,7 @@ public:
   bool set(int posx, int posy);
   //void get_shot(string part)
   bool vertical;
-  Ship(size_t p, bool v) : parts{p}, vecrtical{v} {}
+  Ship(size_t p, bool v) : parts{p}, vertical{v} {}
   //sf::VertexArray ship_vertex;
   sf::ConvexShape ship;
 

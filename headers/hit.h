@@ -11,7 +11,7 @@ public:
   bool set(int posx, int posy);
   //void get_shot(string part)
   bool hit_ship;
-  Hit(bool h) : hit_ship{h} {}
+  Hit(bool h, int x, int y);
   sf::CircleShape hit;
 
 private:
@@ -19,4 +19,6 @@ private:
 
 
 };
+
+//int* capture_hit(int x, int y);
 #endif
