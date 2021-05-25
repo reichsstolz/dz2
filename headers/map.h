@@ -2,7 +2,10 @@
 #define MAP_H
 #include <SFML/Graphics.hpp>
 #include "ship.h"
+#include "hit.h"
 #include <vector>
+#include <cmath>
+#include <iostream>
 class Map : public sf::Drawable, public sf::Transformable{
 
 public:
@@ -11,12 +14,13 @@ public:
   bool hidden;
   bool game_over;
   std::vector<Ship> ships;
-  std::vector<std::vector<int>> field;
-  
+  int* field[10][10];
+  std::vector<Hit> hits;
   void add_ship(Ship ship, int posx, int posy);
   void shoot(int posx, int posy);
   bool set(int posx, int posy);
-
+  //~Map();
+  bool capture_click(int y , int x);
 private:
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
