@@ -3,16 +3,18 @@
 #define SHIP_H
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <iostream>
 class Ship : public sf::Drawable, public sf::Transformable{
 
 public:
-  size_t shipx;
-  size_t shipy;
-  size_t parts;
+  size_t shipx, shipy;
+  int parts;
+  int health;
+  int index;
   bool set(int posx, int posy);
-  //void get_shot(string part)
+  void get_shot();
   bool vertical;
-  Ship(size_t p, bool v) : parts{p}, vertical{v} {}
+  Ship(int p, bool v, int ind) : parts{p}, vertical{v}, health{p}, index{ind} {}
   //sf::VertexArray ship_vertex;
   sf::ConvexShape ship;
 

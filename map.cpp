@@ -1,10 +1,11 @@
 #include "headers/map.h"
 // compile g++ map.cpp test.cpp headers/map.h -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
-bool Map::set(int posx, int posy){
+void Map::set(int posx, int posy){
       for (int i=0; i<10; i++){
-        for (int k=0; k<10; k++){
-          field[i][k]=new int(0);
-        }
+          field[i]= new int[10];
+          for (int k=0; k<10; k++){
+              field[i][k]=0;
+          }
       }
       map_quads.setPrimitiveType(sf::LineStrip);
       map_quads.resize(56);
@@ -52,34 +53,44 @@ bool Map::set(int posx, int posy){
      }
      this->mapx=posx-50;
      this->mapy=posy;
-     return true;
 }
 void Map::add_ship(Ship ship, int posx, int posy){
    ship.set(mapx+(posx)*50+23,mapy+(posy)*50+23);
    ship.shipx=posx;
    ship.shipy=posy;
-   //*field[posx][posy]=1;
-   //std::cout<<field.size()<<" "<<field[posx, posy]<<"\n";
    if (!ship.vertical){
    for (int i=0; i<ship.parts; i++){
-        field[posx][posy+i]= new int(1);
+        field[posx][posy+i]= ship.index;
    }
    }else{
    for (int i=0; i<ship.parts; i++){
-        field[posx+i][posy]= new int(1);
+        field[posx+i][posy]= ship.index;
    }
- }
-   ships.push_back(ship);
+   }
+   ships.push_back(new Ship(ship));
 }
 
 void Map::shoot(int posx, int posy){
-       if (*field[posx][posy]==1){
-       hits.push_back(Hit(true, mapx+(posx)*50+18, mapy+(posy)*50+18));
-     }else if (*field[posx][posy]!=2){
-       hits.push_back(Hit(false, mapx+(posx)*50+18, mapy+(posy)*50+18));
-       }
-       delete field[posx][posy];
-       field[posx][posy]=new int (2);
+    if (posx>-1 and posy>-1 and posy<10 and posx<10) {
+        if (field[posx][posy] == 0) {
+            hits.push_back(Hit(false, mapx + (posx) * 50 + 18, mapy + (posy) * 50 + 18));
+            //delete field[posx][posy];
+            field[posx][posy] = 2;
+        } else if (field[posx][posy] != 2 && field[posx][posy] != 0) {
+            hits.push_back(Hit(true, mapx + (posx) * 50 + 18, mapy + (posy) * 50 + 18));
+            for (auto i : ships) {
+                if (i->index == field[posx][posy]) {
+                    i->get_shot();
+
+                    if (i->health < 1) {
+                        dead_ship(i->shipx, i->shipy, i->vertical, i->parts);
+                    }
+                    //delete field[posx][posy];
+                    field[posx][posy] = 2;
+                }
+            }
+        }
+    }
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const{
@@ -88,20 +99,53 @@ void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const{
      // draw the vertex array
      target.draw(map_quads, states);
      if (!hidden){
-       for (Ship i:ships){
-          target.draw(i.ship, states);
+       for (auto i:ships){
+          target.draw(i->ship, states);
        }
      }
      for (Hit i: hits ){
        target.draw(i.hit, states);
      }
    }
+
 bool Map::capture_click(int x, int y){
   x-=mapx;
   y-=mapy;
   if (x/50 < 10  and y/50 < 10 and x>0 and y>0){
-     this->shoot(floor(x/50), floor(y/50) );
+     shoot(floor(x/50), floor(y/50) );
+     std::cout<<"\nX "<<floor(x/50)<<" Y "<<floor(y/50);
      return true;
   }
   return false;
 }
+
+void Map::dead_ship(int x, int y, bool vertical, size_t parts){
+    if (vertical){
+        for(int i=x-1; i<x+parts+1; i++){
+            shoot(i,y-1);
+            shoot(i,y+1);
+        }
+        shoot(x-1,y);
+        shoot(x+parts, y);
+    }else{
+       for(int i=y-1; i<y+parts+1; i++){
+           shoot(x-1, i);
+           shoot(x+1, i);
+       }
+       shoot(x, y-1);
+       shoot(x, y+parts);
+    }
+
+}
+
+/*void Map::set_ships(){
+  std::vector<int> avalible_ships={1, 1, 1, 1, 2, 2, 2, 3, 3, 4};
+  std::srand(std::time(nullptr));
+  int x, y;
+  for (int i=0; i<4;  i++){
+    x = std::rand()%10;
+    y = std::rand()%10;
+    field[x][y] =new int(1);
+
+  }
+}*/
