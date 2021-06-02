@@ -13,8 +13,7 @@ add_executable(dz2
         player.cpp)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/headers)
 
-#Find any version 2.X of SFML
-#See the FindSFML.cmake file for additional details and instructions
+
 find_package(SFML 2.5 REQUIRED network audio graphics window system REQUIRED)
 
 #include_directories(${SFML_INCLUDE_DIR})
