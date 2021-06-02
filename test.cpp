@@ -5,13 +5,13 @@ int main()
 {
    // create the window
    sf::RenderWindow window(sf::VideoMode(800, 800), "My window");
-   Map map;
-   map.hidden=false;
-   map.set(80,80);
+   Map mymap;
+   mymap.hidden=false;
+   mymap.set(80,80);
    Ship ship(3, true);
    Ship ship1(4, false);
-   map.add_ship(ship, 2, 2);
-   map.add_ship(ship1, 5, 4);
+   mymap.add_ship(ship, 2, 2);
+   mymap.add_ship(ship1, 5, 4);
    //map.shoot(2,2);
    //map.shoot(3,3);
    // run the program as long as the window is open
@@ -27,7 +27,7 @@ int main()
 
            if (event.type == sf::Event::MouseButtonPressed){
                if (event.mouseButton.button == sf::Mouse::Left){
-                 std::cout<<event.mouseButton.x<<" "<<event.mouseButton.y<<"\n";
+                 //std::cout<<event.mouseButton.x<<" "<<event.mouseButton.y<<"\n";
                  if (map.capture_click(event.mouseButton.x, event.mouseButton.y)){
                    std::cout<<"\n$HIT$\n";
                  }

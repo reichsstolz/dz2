@@ -12,7 +12,6 @@ public:
   size_t mapx;
   size_t mapy;
   bool hidden;
-  //bool game_over;
   std::vector<Ship*> ships;
   int* field[10];
   std::vector<Hit> hits;
@@ -21,7 +20,7 @@ public:
   void set(int posx, int posy);
   //void set_ships();
   void dead_ship(int x, int y, bool vertical, size_t parts);
-  bool capture_click(int y , int x);
+  std::vector<int> capture_click(int y , int x);
 private:
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 

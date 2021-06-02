@@ -1,19 +1,17 @@
 #include "headers/map.h"
 #include "headers/ship.h"
 #include "headers/hit.h"
+#include "headers/player.h"
 int main()
 {
-   // create the window
-   sf::RenderWindow window(sf::VideoMode(800, 800), "My window");
-   Map map;
-   map.hidden=false;
-   map.set(80,80);
-   Ship ship(3, true, 33);
-   Ship ship1(4, false, 41);
-   Ship ship2(3, false, 35);
-   map.add_ship(ship2, 9, 3);
-   map.add_ship(ship, 2, 2);
-   map.add_ship(ship1, 5, 4);
+   sf::RenderWindow window(sf::VideoMode(1050, 600), "My window");
+
+   Player player(false);
+   Player enemy(true);
+   player.map.hidden= false;
+   enemy.map.hidden= false;
+   player.map.set(10, 40);
+   enemy.map.set(540, 40);
    while (window.isOpen())
    {
        // check all the window's events that were triggered since the last iteration of the loop
@@ -26,11 +24,15 @@ int main()
 
            if (event.type == sf::Event::MouseButtonPressed){
                if (event.mouseButton.button == sf::Mouse::Left){
-
-                 if (map.capture_click(event.mouseButton.x, event.mouseButton.y)){
+                   if (!player.ships_set){
+                       player.set_ships(event.mouseButton.x, event.mouseButton.y);
+                   }else{
+                       player.get_hit(event.mouseButton.x, event.mouseButton.y);
+                   }
+                 /*if (map.capture_click(event.mouseButton.x, event.mouseButton.y)){
                    std::cout<<"\n$HIT$\n";
-                     std::cout<<event.mouseButton.x<<" "<<event.mouseButton.y;
-                 }
+                   std::cout<<event.mouseButton.x<<" "<<event.mouseButton.y;
+                 }*/
                }
            }
        }
@@ -41,7 +43,8 @@ int main()
        // draw everything here...
        // window.draw(...);
        window.clear();
-       window.draw(map);
+       window.draw(player.map);
+       window.draw(enemy.map);
        //window.draw(hit);
        //window.draw(hit1);
        window.display();

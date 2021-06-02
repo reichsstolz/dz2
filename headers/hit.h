@@ -6,12 +6,11 @@
 class Hit : public sf::Drawable, public sf::Transformable{
 
 public:
-  size_t hitx;
-  size_t hity;
+  int hitx;
+  int hity;
   bool set(int posx, int posy);
-  //void get_shot(string part)
   bool hit_ship;
-  Hit(bool h, int x, int y);
+  Hit(bool h, int x, int y, size_t hx, size_t hy);
   sf::CircleShape hit;
 
 private:

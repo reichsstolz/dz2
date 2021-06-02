@@ -10,9 +10,11 @@ bool Hit::set(int posx, int posy){
    }
    return true;
  }
-Hit::Hit(bool h, int x, int y) : hit_ship{h}
+Hit::Hit(bool h, int x, int y, size_t hx, size_t hy) : hit_ship{h}
 {
-  this->set(x, y);
+  set(x, y);
+  hitx=hx;
+  hity=hy;
 }
 void Hit::draw(sf::RenderTarget& target, sf::RenderStates states) const{
        states.transform *= getTransform(); // getTransform() is defined by sf::Transformable
