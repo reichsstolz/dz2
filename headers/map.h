@@ -16,7 +16,7 @@ public:
   int* field[10];
   std::vector<Hit> hits;
   void add_ship(Ship ship, int posx, int posy);
-  void shoot(int posx, int posy);
+  int shoot(int posx, int posy);
   void set(int posx, int posy);
   //void set_ships();
   void dead_ship(int x, int y, bool vertical, size_t parts);

@@ -72,34 +72,28 @@ void Map::add_ship(Ship ship, int posx, int posy){
 
 }
 
-void Map::shoot(int posx, int posy){
-  std::cout<<"\nSHOOTING  "<<posx<<" "<<posy<<"\n";
+int Map::shoot(int posx, int posy){
     if (posx>-1 and posy>-1 and posy<10 and posx<10) {
-        /*for (int i=0; i<10; i++){
-            std::cout<<"\n";
-            for (int k=0; k<10; k++){
-                std::cout<<field[i][k]<<" ";
-            }
-        }*/
-        std::cout<<"\nSHOOTING V  "<<posx<<" "<<posy<<"\n";
         if (field[posx][posy] == 0) {
             hits.push_back(Hit(false, mapx + (posx) * 50 + 18, mapy + (posy) * 50 + 18, posx, posy) );
             field[posx][posy] = 2;
+            return 0;
         } else if (field[posx][posy] != 2 && field[posx][posy] != 0) {
             hits.push_back(Hit(true, mapx + (posx) * 50 + 18, mapy + (posy) * 50 + 18, posx, posy));
             for (auto i : ships) {
                 if (i->index == field[posx][posy]) {
                     i->get_shot();
-
+                    field[posx][posy] = 2;
                     if (i->health < 1) {
                         dead_ship(i->shipx, i->shipy, i->vertical, i->parts);
+                        return i->index;
                     }
-                    //delete field[posx][posy];
-                    field[posx][posy] = 2;
+                    return 1;
                 }
             }
         }
     }
+    return 0;
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const{
@@ -133,8 +127,6 @@ std::vector<int> Map::capture_click(int x, int y){
 void Map::dead_ship(int x, int y, bool vertical, size_t parts){
 
     if (vertical){
-        //std::cout<<"\n V\n";
-        //std::cout<<"\nDead_ship:  i="<<x-1<<"  i<"<<x+parts+1<<" x "<<y-1<<" "<<y+1<<" \n";
         for(int i=x+parts; i>x-2; i--){
             shoot(i,y-1);
             shoot(i,y+1);
@@ -142,10 +134,7 @@ void Map::dead_ship(int x, int y, bool vertical, size_t parts){
         shoot(x-1,y);
         shoot(x+parts, y);
     }else{
-       //std::cout<<std::endl<<"G"<<std::endl;
-       //std::cout<<std::endl<<"Dead_ship:  i ="<<y-1<<"  i< "<<y+parts+1<<" x "<<x-1<<" "<<x+1<<std::endl;
        for(int i=y+parts; i>y-2; i--){
-           //std::cout<<std::endl<<"AAAAAAAAAAAAAAAAAA"<<std::endl;
            shoot(x-1, i);
            shoot(x+1, i);
        }

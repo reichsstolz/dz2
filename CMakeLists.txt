@@ -15,8 +15,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/headers)
 
 
 find_package(SFML 2.5 REQUIRED network audio graphics window system REQUIRED)
-
-#include_directories(${SFML_INCLUDE_DIR})
 target_link_libraries(dz2 sfml-graphics sfml-window sfml-system)
 
 

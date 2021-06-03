@@ -4,10 +4,25 @@
 #include "headers/player.h"
 int main()
 {
-   sf::RenderWindow window(sf::VideoMode(1050, 600), "My window");
+   sf::RenderWindow window(sf::VideoMode(1050, 600), "Sausages Party");
+    sf::Text text;
+    //sf:: Font font;
+    //font.loadFromFile("arial.ttf");
+    //text.setString("YOU LOST");
+    //text.setFont(font);
+
+
+
+
+
+   /*
+   text.setCharacterSize(50); // in pixels, not points!
+   text.setPosition(290, 500);
+   text.setFillColor(sf::Color::Green);
+   text.setStyle(sf::Text::Bold);*/
 
    Player player(false);
-   Player enemy(true);
+   Player enemy(false);
    player.map.hidden= false;
    enemy.map.hidden= false;
    player.map.set(10, 40);
@@ -23,30 +38,33 @@ int main()
                window.close();
 
            if (event.type == sf::Event::MouseButtonPressed){
-               if (event.mouseButton.button == sf::Mouse::Left){
-                   if (!player.ships_set){
-                       player.set_ships(event.mouseButton.x, event.mouseButton.y);
-                   }else{
-                       player.get_hit(event.mouseButton.x, event.mouseButton.y);
+               if (event.mouseButton.button == sf::Mouse::Left and !player.game_over){
+                   if (player.game_over){
+                       //window.draw(text);
+                       std::cout<<"\nLost player\n";
                    }
-                 /*if (map.capture_click(event.mouseButton.x, event.mouseButton.y)){
-                   std::cout<<"\n$HIT$\n";
-                   std::cout<<event.mouseButton.x<<" "<<event.mouseButton.y;
-                 }*/
+                   if (enemy.game_over){
+                       //window.draw(text);
+                       std::cout<<"\nLost enemy\n";
+                   }
+                   if (!player.ships_set or !enemy.ships_set){
+                       player.set_ships(event.mouseButton.x, event.mouseButton.y);
+                       enemy.set_ships(event.mouseButton.x, event.mouseButton.y);
+                   }else{
+                      enemy.set_priority(player.get_hit(enemy.shoot()));
+                      enemy.get_hit(enemy.map.capture_click(event.mouseButton.x, event.mouseButton.y));
+
+                   }
                }
            }
        }
 
        // clear the window with black color
        window.clear(sf::Color::Black);
-
-       // draw everything here...
-       // window.draw(...);
        window.clear();
+
        window.draw(player.map);
        window.draw(enemy.map);
-       //window.draw(hit);
-       //window.draw(hit1);
        window.display();
    }
 
