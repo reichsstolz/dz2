@@ -18,7 +18,9 @@ public:
   void add_ship(Ship ship, int posx, int posy);
   int shoot(int posx, int posy);
   void set(int posx, int posy);
-  //void set_ships();
+  void clean();
+  void set_ships(int seed);
+  int get_field(int x, int y);
   void dead_ship(int x, int y, bool vertical, size_t parts);
   std::vector<int> capture_click(int y , int x);
 private:

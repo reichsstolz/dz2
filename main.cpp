@@ -22,7 +22,7 @@ int main()
    text.setStyle(sf::Text::Bold);*/
 
    Player player(false);
-   Player enemy(false);
+   Player enemy(true);
    player.map.hidden= false;
    enemy.map.hidden= false;
    player.map.set(10, 40);

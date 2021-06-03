@@ -4,11 +4,11 @@ Player::Player(bool ai) {
     is_ai = ai;
     ships_set = false;
     game_over = false;
-    std::srand(2399);
+    std::srand(std::time(nullptr));
     ships.resize(10);
     last_shot.resize(2);
     ships={11, 12, 13, 14, 21, 22, 23, 31, 32, 41};
-    enemyships={1, 1, 1, 1, 2, 2, 2, 3, 3, 4};
+    //enemyships={1, 1, 1, 1, 2, 2, 2, 3, 3, 4};
     for (auto & i : field){
         i = new int[10];
         for (int k=0; k<10; k++){
@@ -35,6 +35,7 @@ bool Player::set_ships(int clickx, int  clicky) {
 
     if (is_ai and !ships_set){
          ships_set=true;
+         map.set_ships(23223);
 
     }else if (!ships_set and !click.empty()) {
 

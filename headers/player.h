@@ -21,6 +21,6 @@ public:
     int get_field(int x, int y);
     Player(bool ai);
     std::vector<int> ships;
-    std::vector<int> enemyships;
+    //std::vector<int> enemyships;
 };
 #endif

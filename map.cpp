@@ -1,10 +1,10 @@
 #include "headers/map.h"
 // compile g++ map.cpp test.cpp headers/map.h -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
 void Map::set(int posx, int posy){
-      for (int i=0; i<10; i++){
-          field[i]= new int[10];
+      for (auto & i : field){
+          i= new int[10];
           for (int k=0; k<10; k++){
-              field[i][k]=0;
+              i[k]=0;
           }
       }
       map_quads.setPrimitiveType(sf::LineStrip);
@@ -116,7 +116,7 @@ std::vector<int> Map::capture_click(int x, int y){
   y-=mapy;
   std::vector<int> res;
   if (x/50 < 10  and y/50 < 10 and x>0 and y>0){
-     std::cout<<"\nX "<<floor(x/50)<<" Y "<<floor(y/50);
+     //std::cout<<"\nX "<<floor(x/50)<<" Y "<<floor(y/50);
      res.push_back(floor(x/50));
      res.push_back(floor(y/50));
      return res;
@@ -143,15 +143,118 @@ void Map::dead_ship(int x, int y, bool vertical, size_t parts){
     }
 
 }
+int Map::get_field(int x, int y){
+    if (x>-1 and y>-1 and y<10 and x<10){
+        return field[x][y];
+    }else{
+        return -1;
+    }
+}
 
-/*void Map::set_ships(){
-  std::vector<int> avalible_ships={1, 1, 1, 1, 2, 2, 2, 3, 3, 4};
-  std::srand(std::time(nullptr));
-  int x, y;
-  for (int i=0; i<4;  i++){
-    x = std::rand()%10;
-    y = std::rand()%10;
-    field[x][y] =new int(1);
-
+void Map::clean(){
+    ships.clear();
+    hits.clear();
+    for (auto & i : field){
+        for (int k=0; k<10; k++){
+            i[k]=0;
+        }
+    }
+}
+void Map::set_ships(int seed){
+  std::vector<int> ships_to_place={11, 12, 13, 14, 21, 22, 23, 31, 32};
+  add_ship(Ship(4, std::rand()%2, 41), std::rand()%5, std::rand()%5);
+  dead_ship(std::rand()%5, std::rand()%5, std::rand()%2, 4);
+  std::srand(seed);
+  int trys =0;
+  std::vector<int> pos(2);
+  bool placed = false;
+  std::vector<std::vector<int>> freespace;
+  for (int j=0; j<10; j++){
+        for (int p=0; p<10; p++){
+            if (field[j][p]==0)
+               freespace.push_back({j,p});
+        }
   }
-}*/
+  while (trys<120 and !ships_to_place.empty()){
+      pos=freespace[std::rand()%freespace.size()];
+      //std::cout<<"\n x:"<<pos[0]<<" y:"<<pos[1]<<std::endl;
+      if (std::rand()%2){
+          for (int i = pos[1]; i <pos[1]+4 && !placed; i++) {
+              if (get_field(pos[0], i)==0){
+                  for (int  k=ships_to_place.size()-1; k>-1; k--){
+                      if (ships_to_place[k]/10==(i-pos[1])){
+                          std::cout<<"\nPLACED IND "<<ships_to_place[k]<<" SIZE:"<<ships_to_place.size()<<std::endl;
+                          add_ship(Ship(ships_to_place[k]/10, false, ships_to_place[k]), pos[0], pos[1]);
+                          dead_ship(pos[0], pos[1], false, i-pos[0]);
+                          placed=true;
+                          ships_to_place.erase(ships_to_place.begin()+k);
+                          freespace.clear();
+                          for (int j=0; j<10; j++){
+                              for (int p=0; p<10; p++){
+                                  if (field[j][p]==0)
+                                      freespace.push_back({j,p});
+                              }
+                          }
+                          break;
+                      }
+
+                  }
+
+              }else{
+                  break;
+              }
+          }
+      }if (!placed) {
+          for (int i = pos[0]; i <pos[0]+4 && !placed;  i++) {
+              if (get_field(i, pos[1])==0){
+                  for (int  k=ships_to_place.size()-1; k>-1; k--){
+                      if (ships_to_place[k]/10==i-pos[0]){
+                          std::cout<<"\nPLACED IND "<<ships_to_place[k]<<" SIZE:"<<ships_to_place.size()<<std::endl;
+                          add_ship(Ship(ships_to_place[k]/10, true, ships_to_place[k]), pos[0], pos[1]);
+                          dead_ship(pos[0], pos[1], true, i-pos[0]);
+                          placed=true;
+                          ships_to_place.erase(ships_to_place.begin()+k);
+                          freespace.clear();
+                          for (int j=0; j<10; j++){
+                              for (int p=0; p<10; p++){
+                                  if (field[j][p]==0)
+                                      freespace.push_back({j,p});
+                              }
+                          }
+                          break;
+                      }
+
+                  }
+              }else{
+                  break;
+              }
+
+              }
+
+          }
+      placed = false;
+      trys+=1;
+  }
+
+
+
+  if (!ships_to_place.empty()){
+      std::cout<<"\nUNABLE TO PLACE\n";
+      /*for (int j=0; j<10; j++){
+          std::cout<<"\n";
+          for (int p=0; p<10; p++){
+              std::cout<<field[p][j]<<"  ";
+          }
+      }*/
+      clean();
+      set_ships(seed+1);
+  }else{
+      for (auto & i : field){
+          for (int k=0; k<10; k++){
+              if (i[k] == 2)
+                  i[k] = 0;
+          }
+  }
+  hits.clear();
+}
+}
