@@ -162,8 +162,13 @@ void Map::clean(){
 }
 void Map::set_ships(int seed){
   std::vector<int> ships_to_place={11, 12, 13, 14, 21, 22, 23, 31, 32};
-  add_ship(Ship(4, std::rand()%2, 41), std::rand()%5, std::rand()%5);
-  dead_ship(std::rand()%5, std::rand()%5, std::rand()%2, 4);
+  int x, y, v;
+  y =std::rand()%5;
+  x= std::rand()%5;
+  v=std::rand()%2;
+  add_ship(Ship(4, v, 41), x, y);
+  dead_ship(x, y, v, 4);
+
   std::srand(seed);
   int trys =0;
   std::vector<int> pos(2);
@@ -185,12 +190,14 @@ void Map::set_ships(int seed){
                       if (ships_to_place[k]/10==(i-pos[1])){
                           std::cout<<"\nPLACED IND "<<ships_to_place[k]<<" SIZE:"<<ships_to_place.size()<<std::endl;
                           add_ship(Ship(ships_to_place[k]/10, false, ships_to_place[k]), pos[0], pos[1]);
-                          dead_ship(pos[0], pos[1], false, i-pos[0]);
+                          dead_ship(pos[0], pos[1], false, ships_to_place[k]/10);
                           placed=true;
                           ships_to_place.erase(ships_to_place.begin()+k);
                           freespace.clear();
                           for (int j=0; j<10; j++){
+                              std::cout<<"\n";
                               for (int p=0; p<10; p++){
+                                  std::cout<<field[p][j]<<"  ";
                                   if (field[j][p]==0)
                                       freespace.push_back({j,p});
                               }
@@ -211,12 +218,14 @@ void Map::set_ships(int seed){
                       if (ships_to_place[k]/10==i-pos[0]){
                           std::cout<<"\nPLACED IND "<<ships_to_place[k]<<" SIZE:"<<ships_to_place.size()<<std::endl;
                           add_ship(Ship(ships_to_place[k]/10, true, ships_to_place[k]), pos[0], pos[1]);
-                          dead_ship(pos[0], pos[1], true, i-pos[0]);
+                          dead_ship(pos[0], pos[1], true, ships_to_place[k]/10);
                           placed=true;
                           ships_to_place.erase(ships_to_place.begin()+k);
                           freespace.clear();
                           for (int j=0; j<10; j++){
+                              std::cout<<"\n";
                               for (int p=0; p<10; p++){
+                                  std::cout<<field[p][j]<<"  ";
                                   if (field[j][p]==0)
                                       freespace.push_back({j,p});
                               }
@@ -232,6 +241,7 @@ void Map::set_ships(int seed){
               }
 
           }
+
       placed = false;
       trys+=1;
   }
@@ -256,5 +266,6 @@ void Map::set_ships(int seed){
           }
   }
   hits.clear();
+  std::cout<<"\nSEED "<<seed<<std::endl;  ///1622799351
 }
 }

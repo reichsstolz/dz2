@@ -33,7 +33,7 @@ bool Ship::set(int posx, int posy){
 }
 void Ship::get_shot() {
     health-=1;
-    //std::cout<<"\nIndex: "<<index<<" Health: "<<health<<"\n";
+    std::cout<<"\nIndex: "<<index<<" Health: "<<health<<"\n";
 }
 void Ship::draw(sf::RenderTarget& target, sf::RenderStates states) const{
      states.transform *= getTransform(); // getTransform() is defined by sf::Transformable

@@ -24,7 +24,7 @@ int main()
    Player player(false);
    Player enemy(true);
    player.map.hidden= false;
-   enemy.map.hidden= false;
+   enemy.map.hidden= true;
    player.map.set(10, 40);
    enemy.map.set(540, 40);
    while (window.isOpen())
@@ -38,7 +38,7 @@ int main()
                window.close();
 
            if (event.type == sf::Event::MouseButtonPressed){
-               if (event.mouseButton.button == sf::Mouse::Left and !player.game_over){
+               if (event.mouseButton.button == sf::Mouse::Left and !player.game_over and !enemy.game_over ){
                    if (player.game_over){
                        //window.draw(text);
                        std::cout<<"\nLost player\n";

@@ -35,7 +35,7 @@ bool Player::set_ships(int clickx, int  clicky) {
 
     if (is_ai and !ships_set){
          ships_set=true;
-         map.set_ships(23223);
+         map.set_ships(std::time(nullptr));//std::time(nullptr));
 
     }else if (!ships_set and !click.empty()) {
 
